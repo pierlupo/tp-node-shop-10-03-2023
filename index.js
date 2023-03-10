@@ -1,7 +1,6 @@
 import express from "express";
 import { Shop } from "./classes/app.js";
 
-
 //An object to manage the shop
 const dataservice = new Shop();
 
@@ -70,6 +69,7 @@ api.post("/customers", (req, res) => {
     res.json({ message: "error" });
   }
 });
+
 // Endpoint to get customers
 api.get("/customers", (req, res) => {
   res.json(dataservice.customers);
@@ -103,6 +103,54 @@ api.delete("/customers/:id", (req, res) => {
     res.json({ message: "error" });
   }
 });
+
+/*********Order Endpoints*********/
+
+// Endpoint to add an order
+api.post("/orders", (req, res) => {
+  const { title, content } = req.body;
+  if (title != undefined && content != undefined) {
+    dataservice.addOrder(title, content);
+    res.json({ message: "order added" });
+  } else {
+    res.json({ message: "error" });
+  }
+});
+
+// Endpoint to get orders
+api.get("/orders", (req, res) => {
+  res.json(dataservice.orders);
+});
+
+// Endpoint to get an order by id
+api.get("/orders/:id", (req, res) => {
+  const order = dataservice.getOrderById(req.params.id);
+  if (order != undefined) {
+    res.json(order);
+  } else {
+    res.json({ message: "Didn't find order" });
+  }
+});
+
+// Endpoint to update/edit an order
+api.put("/orders/:id", (req, res) => {
+  const { title, content } = req.body;
+  if (dataservice.editOrder(req.params.id, title, content)) {
+    res.json({ message: "order updated" });
+  } else {
+    res.json({ message: "error" });
+  }
+});
+
+// Endpoint to delete an order
+api.delete("/orders/:id", (req, res) => {
+  if (dataservice.deleteOrder(req.params.id)) {
+    res.json({ message: "order deleted" });
+  } else {
+    res.json({ message: "error" });
+  }
+});
+
 api.listen(3000, () => {
   dataservice.read();
   console.log("api shop");

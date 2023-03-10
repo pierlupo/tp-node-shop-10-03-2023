@@ -5,6 +5,6 @@ export class Order extends Customer {
         this.id = id,
         this.title = title,
         this.content = content,
-        this.status = false
+        this.isDone = false
     }
 }

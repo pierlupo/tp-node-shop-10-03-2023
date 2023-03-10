@@ -1,6 +1,7 @@
 import { writeFileSync, readFileSync } from "fs";
 import { Product } from "./product.js";
 import { Customer } from "./customer.js";
+import { Order } from "./order.js";
 
 export class Shop {
   constructor() {
@@ -8,6 +9,8 @@ export class Shop {
     this.productCounter = 0;
     this.customers = [];
     this.customerCounter = 0;
+    this.orders = [];
+    this.orderCounter = 0;
     this.productFile = "productdata.json";
     this.customerFile = "customerdata.json";
     this.orderFile = "orderdata.json";
@@ -26,11 +29,18 @@ export class Shop {
       this.customers[this.customers.length - 1] != undefined
         ? this.customers[this.customers.length - 1].id
         : 0;
+        const orderContent = readFileSync(this.orderFile).toString();
+        this.orders = JSON.parse(orderContent);
+        this.orderCounter =
+          this.orders[this.orders.length - 1] != undefined
+            ? this.orders[this.orders.length - 1].id
+            : 0;
   }
 
   write() {
     writeFileSync(this.productFile, JSON.stringify(this.products));
     writeFileSync(this.customerFile, JSON.stringify(this.customers));
+    writeFileSync(this.orderFile, JSON.stringify(this.orders));
   }
 
   /*********Product part*********/
@@ -108,6 +118,43 @@ export class Shop {
     const customer = this.getCustomerById(id);
     if (customer != undefined) {
       this.customers = this.customers.filter((c) => c.id != id);
+      this.write();
+      return true;
+    }
+    return false;
+  }
+
+   /*********Order part*********/
+
+  //Méthod to add an order
+  addOrder(title, content) {
+    const order = new Order(++this.orderCounter, title, content);
+    this.orders.push(order);
+    this.write();
+  }
+
+  // Méthod to get an order by id
+  getOrderById(id) {
+    return this.orders.find((o) => o.id == id);
+  }
+
+  //Méthod to edit an order
+  editOrder(id, title, content) {
+    const order = this.getOrderById(id);
+    if (order != undefined) {
+      order.title = title;
+      order.content = content;
+      this.write();
+      return true;
+    }
+    return false;
+  }
+
+  //Méthod to delete an order
+  deleteOrder(id) {
+    const order = this.getOrderById(id);
+    if (order != undefined) {
+      this.orders = this.orders.filter((o) => o.id != id);
       this.write();
       return true;
     }
