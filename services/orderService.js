@@ -1,5 +1,6 @@
 import { BaseService } from "./BaseService.js";
 import { Order } from "../classes/order.js";
+import { orderProduct } from "../classes/orderProduct.js";
 
 export class OrderService extends BaseService {
   constructor(customerService, productService) {
@@ -20,7 +21,8 @@ export class OrderService extends BaseService {
         const product = this.productService.getProductById(p.id);
         if (product != undefined && p.qty > 0) {
           if (product.stock >= p.qty) {
-            orderProducts.push({ product: product, qty: p.qty });
+            //orderProducts.push({ product: product, qty: p.qty });
+            orderProducts.push(new orderProduct(product.id, product.title,product.price,p.qty))
             this.productService.updateProductStockById(p.id, p.qty);
           }
         }
