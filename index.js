@@ -6,7 +6,9 @@ import { ProductService } from "./services/productService.js";
 import productRouter from "./router/productRouter.js";
 import customerRouter from "./router/customerRouter.js";
 import orderRouter from "./router/orderRouter.js";
-
+//cors installé par la cmd npm i cors
+//(tout ce qui est dans les "dependencies" du fichier package.json s'installent avec npm i)
+import cors from "cors";
 
 //An object to manage the shop
 //const dataservice = new Shop();
@@ -19,16 +21,18 @@ const port = 3001;
 //Use of middleware json
 app.use(express.json());
 
+app.use(cors({origin:"*"}));
+
 //création de services
-export const customerService = new CustomerService()
-export const productService = new ProductService()
-export const orderService = new OrderService(customerService, productService)
+export const customerService = new CustomerService();
+export const productService = new ProductService();
+export const orderService = new OrderService(customerService, productService);
 
 //création de router
 
-app.use('/prod', productRouter)
-app.use('/cust', customerRouter)
-app.use('/cmd', orderRouter)
+app.use('/prod', productRouter);
+app.use('/cust', customerRouter);
+app.use('/cmd', orderRouter);
 
 // /*********Product Endpoints*********/
 
