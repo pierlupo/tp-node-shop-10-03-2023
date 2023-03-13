@@ -1,10 +1,8 @@
-import { Customer } from "./customer";
 
-export class Order extends Customer {
-    constructor(id,title){
+export class Order {
+    constructor(id,customer,products){
         this.id = id,
-        this.title = title,
-        this.content = content,
-        this.isDone = false
+        this.customer = customer,
+        this.products = products
     }
 }
